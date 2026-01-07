@@ -8,6 +8,16 @@ import lombok.*; // 게터 세터 자동 생성.
 @NoArgsConstructor // 파라미터 없는 기본 생성자를 만들어줌!
 @AllArgsConstructor // 모든 필드를 받는 생성자를 자동 생성.
 @Builder // 빌더 패턴 제공.
+/*
+User user = User.builder()
+    .username("parkhs")
+    .password("1234")
+    .email("park@hgu.ac.kr")
+    .name("박해석")
+    .build();
+    순서 상관없음. 필요한 것만 설정 가능.
+    외부에서 객체를 만들 때 쓰라고 달아둔 것.
+ */
 @Table(name = "users")
 public class User {
 
