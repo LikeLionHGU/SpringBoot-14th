@@ -1,0 +1,45 @@
+예: User ↔ Post
+
+Post 쪽: post.author (ManyToOne, FK 주인)
+
+User 쪽: user.posts (OneToMany, mappedBy, 조회용 컬렉션)
+
+즉 같은 관계를 두 군데에 저장하는 구조.
+
+ 그래서 “동기화”란?
+
+post.author를 바꾸면 user.posts도 맞춰주고,
+user.posts에 추가하면 post.author도 맞춰주는 것.
+
+1.  왜 동기화 안 하면 문제가 생기나?
+
+핵심: DB에 저장되는 값은 “주인(FK)”만 본다
+
+FK 주인 = @ManyToOne 쪽
+즉, post.author가 진짜 중요!
+
+반대편 컬렉션(user.posts)은 “자동으로 안 맞춰진다”
+JPA가 메모리 안의 리스트를 자동 정리해주지 않기 때문.
+
+2. “양방향 동기화”를 하는 정석 방법
+
+정석은: 한쪽에만 “편의 메서드”를 만들고, 그걸 통해서만 관계를 맺게 하기
+
+예: Post가 User를 지정하는 편의 메서드
+
+public void assignAuthor(User user) {
+    this.author = user;            // FK 주인 세팅
+    user.getPosts().add(this);     // 반대편 컬렉션도 맞춤
+}
+
+
+예: Comment가 Post를 지정하는 편의 메서드
+
+public void assignPost(Post post) {
+    this.post = post;               // FK 주인 세팅
+    post.getComments().add(this);   // 반대편도 맞춤
+}
+
+결론 : 양방향은 같은 관계를 두 군데에 저장한다.
+     그래서 한쪽만 바꾸면 다른 쪽 리스트는 자동으로 안 맞는다.
+     저장은 ManyToOne이 결정하니까, 편의 메서드로 양쪽을 같이 맞추면 안전하다.

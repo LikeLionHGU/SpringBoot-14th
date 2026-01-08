@@ -1,4 +1,4 @@
-package com.thc.back14th.dto;
+package com.thc.back14th.dto.user;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

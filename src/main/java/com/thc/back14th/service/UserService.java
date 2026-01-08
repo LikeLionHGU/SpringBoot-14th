@@ -1,9 +1,9 @@
 package com.thc.back14th.service;
 
 import com.thc.back14th.domain.User;
-import com.thc.back14th.dto.UserCreateRequest;
-import com.thc.back14th.dto.UserResponse;
-import com.thc.back14th.dto.UserUpdateRequest;
+import com.thc.back14th.dto.user.UserCreateRequest;
+import com.thc.back14th.dto.user.UserResponse;
+import com.thc.back14th.dto.user.UserUpdateRequest;
 import com.thc.back14th.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -52,13 +52,27 @@ public class UserService {
         return UserResponse.from(user); // Entity --> Dto변환.
     } // Repository는 엔티티를 주고, Service는 DTO로 포장해서 Controller에게 준다.
 
+    @Transactional//Update는 DB를 바꾸는 작업이라 트랜잭션이 필요함.
     public void update(Long id, UserUpdateRequest req) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("유저가 없습니다. id=" + id));
         user.updateName(req.getName());
     }
+    /*
+    findById는 Optional<User>로 반환. User가 있을 수도 있고, 없을 수도 있다는 뜻.
+    DB 조회 결과는 있을 수도 있고, 없을 수도 있다.
+    Optional은 이 상황을 null 대신 안전하게 표현하는 타입입니다.
+    orElseThrow: 있으면 User를 꺼내고, 없으면 예외를 발생시켜라.
+    그래서 수정은 '대상이 존재하는지' 확인부터 하는게 좋음.
+    user.updateName(req.getName()) : 실제 수정은 엔티티가 한다.
+    DTO가 수정하는게 아니라, 엔티티가 자기 상태를 변경한다.
+    서비스가 값을 전달하고 엔티티가 '변경 행위'를 한다!
+     */
 
+    @Transactional
     public void delete(Long id) {
         userRepository.deleteById(id);
     }
+    // deleteById(id) : PK로 해당 row 삭제.
+    // Delete는 대상만 정하면 끝이라 CRUD에서 가장 단순함.
 }

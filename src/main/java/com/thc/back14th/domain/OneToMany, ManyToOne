@@ -1,0 +1,30 @@
+User = 사람
+Post = 글
+
+한 사람(User)은 글(Post)을 여러 개 쓸 수 있다
+글 하나(Post)는 한 사람(User) 이 쓴다
+
+그래서 관계는:
+User : Post = 1 : N
+Post → User = ManyToOne
+User → Post = OneToMany
+
+DB 관점에서 보면 왜 이렇게 되는지 바로 보임.
+테이블 구조를 상상해보자
+
+(users 테이블)
+id	     name
+1	     철수
+
+
+(posts 테이블)
+id	   title	user_id
+10	   글1	    1
+11	   글2	    1
+
+여기서 제일 중요한 사실은
+1. posts 테이블에 user_id가 있다!!
+2. 즉, Post가 User를 참조하고 있다
+3. 이 user_id가 바로 외래키(FK)
+
+결론(DB 기준): 외래키는 항상 N(Post) 쪽 테이블에 있다.

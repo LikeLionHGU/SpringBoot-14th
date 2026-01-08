@@ -1,8 +1,8 @@
 package com.thc.back14th.controller;
 
-import com.thc.back14th.dto.UserCreateRequest;
-import com.thc.back14th.dto.UserResponse;
-import com.thc.back14th.dto.UserUpdateRequest;
+import com.thc.back14th.dto.user.UserCreateRequest;
+import com.thc.back14th.dto.user.UserResponse;
+import com.thc.back14th.dto.user.UserUpdateRequest;
 import com.thc.back14th.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -35,13 +35,34 @@ public class UserController {
         return userService.findOne(id);
     }// URL {id} 값을 꺼내서 변수 id에 담아둔다. 그래서 PathVariable은 주소에 박힌 값을 뽑아 오는 것.
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}")// PUT은 수정! 수정은 '누구를(id) + 어떻게 바꿀지(body)'가 필요하다.
     public void update(@PathVariable Long id, @Valid @RequestBody UserUpdateRequest req) {
         userService.update(id, req);
     }
+    /*
+    @PathVariable Long id : PathVariable은 주소에 박힌 값을 뽑는 것.
+    @RequestBody UserUpdateRequest req : 요청 body(JSON)를 DTO로 변환해서 받음.
+    결론적으로 RequestBody는 JSON을 객체로 바꿔서 받는 것!!
+    @Valid : DTO에 달려있는 검증 어노테이션을 실행!
+    userService.update(id, req) : 저번에 배운것처럼 컨트롤러는 로직을 하지 않음. id와 req만 넘겨주는 역할을 한다.
+    진짜 수정은 Service가 함! 컨트롤러는 전달만.
+     */
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}")// 누구를 지울지만 알면됨 ({id})
     public void delete(@PathVariable Long id) {
         userService.delete(id);
     }
+    /*
+    @PathVariable Long id : 삭제는 body가 없어도 됨. URL에서 id만 뽑으면 충분.
+     userService.delete(id) : 실제 삭제는 서비스가 repository를 통해 수행!
+     */
+
+    /*
+    컨트롤러 핵심!
+    1. @PathVariable 붙여야함. 안붙이면 id가 안들어와서 400에러 뜸.
+    2. Update에서는 @RequestBody를 붙여야한다. 수정 할때 request가 JSON 형식으로 들어온걸 바꿔서
+    Update해야 하기 때문에 붙여야함.
+    3. DTO에 검증 어노테이션을 붙였으면 @Valid 쓰기.
+
+     */
 }
