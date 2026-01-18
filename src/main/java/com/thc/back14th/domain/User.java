@@ -39,6 +39,12 @@ public class User {
     private String email;
     // unique = true : DB에서 중복 제약. 같은 이메일 두 번 저장 못하게 함!
 
+    // 구글 고유 ID (sub)
+    // 기존 회원들은 null일 수 있으므로 nullable 허용
+    @Column(unique = true, length = 50)
+    private String googleSub;
+
+
     //  1 : N (양방향) - "mappedBy"가 핵심
     @OneToMany(mappedBy = "author")
     private List<Post> posts = new ArrayList<>();
@@ -54,6 +60,17 @@ public class User {
     public void updateName(String name) {
         this.name = name;
     }
+
+
+    //  구글 로그인 시 사용
+    public void updateOAuthProfile(String name) {
+        this.name = name;
+    }
+
+    public void connectGoogle(String googleSub) {
+        this.googleSub = googleSub;
+    }
+
     /* 왜 변경 로직을 repository에 두면 안될까?
     repository는 DB에서 무엇을 할지 실행만 한다. 판단, 규칙 X.
 

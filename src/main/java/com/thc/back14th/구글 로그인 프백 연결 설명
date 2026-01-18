@@ -1,0 +1,32 @@
+전체 흐름 6단계(프런트↔백 연결 중심)
+
+(1) 프런트에서 “구글 로그인 버튼” 클릭
+프런트는 Google Identity Services 같은 걸로 구글 로그인 창을 띄움
+
+(2) 사용자가 구글 계정으로 로그인/동의
+이 과정은 우리 서버가 아닌 “구글 서버”에서 진행됨
+
+(3) 구글이 프런트에게 id_token을 줌
+id_token은 JWT 형태의 문자열
+
+안에는 이런 정보가 들어있음:
+sub(구글 고유 ID), email, name, exp(만료시간) 등
+
+여기서 강조: **프런트가 받은 건 “비밀번호”가 아니라 “신분증”**임.
+
+(4) 프런트가 우리 백엔드로 id_token을 보냄
+예: POST /auth/google
+{ "idToken": "..." }
+
+(5) 백엔드가 id_token을 “검증”함 (가장 중요)
+백엔드는 4가지를 확인한다고 말해주면 좋아:
+서명 검증: 구글이 서명한 토큰이 맞나? (위조 방지)
+iss: 발급자가 구글이 맞나?
+aud: 이 토큰이 “우리 앱(Client ID)”용이 맞나?
+exp: 만료 안 됐나?
+
+이걸 통과하면 “이 사람은 구글이 인증한 사용자”라고 믿을 수 있음.
+
+Postman 쓸 때 → https://oauth.pstmn.io/...
+로컬 프런트 → http://localhost:3000/login/callback
+배포 프런트 → https://likelion.com/login/callback

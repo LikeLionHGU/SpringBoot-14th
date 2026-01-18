@@ -51,12 +51,12 @@ dependencies {
     // - 메모리 기반 DB
     // - 설치 필요 없이 즉시 사용 가능
     // - 서버 종료 시 데이터 초기화
-    runtimeOnly 'com.h2database:h2'
+    //runtimeOnly 'com.h2database:h2'
 
     // Database (운영용 MySQL)
     // - 실제 서비스용 DB
     // - 필요할 때 위 H2 대신 사용
-    // runtimeOnly 'com.mysql:mysql-connector-j'
+    runtimeOnly 'com.mysql:mysql-connector-j'
 
 
     // Dev Tools (개발 편의 기능)
@@ -70,6 +70,12 @@ dependencies {
     // - JUnit, Mockito, Spring Test 포함
     // - 애플리케이션 동작 검증용
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // Google ID Token 검증용 (Google API Client)
+    implementation 'com.google.api-client:google-api-client:2.6.0'
+
+
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 }
 
 

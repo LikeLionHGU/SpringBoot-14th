@@ -3,8 +3,12 @@ package com.thc.back14th.repository;
 import com.thc.back14th.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository; // JPA가 제공하는 CRUD 기본 도구 상자(?)
 
+import java.util.Optional;
+
 public interface UserRepository extends JpaRepository<User, Long> {
-    boolean existsByEmail(String email); // 이건 커스텀 메서드. Jpa가 메서드 이름만보고 SQL를 자동으로 생성해줌.
+    boolean existsByEmail(String email);
+    Optional<User> findByEmail(String email);
+    Optional<User> findByGoogleSub(String googleSub);
 }
 // extends JpaRepository<User, Long>: User는 어떤 엔티티를 다룰지, Long은 User 엔티티의 @Id와 일치해야함!
 
